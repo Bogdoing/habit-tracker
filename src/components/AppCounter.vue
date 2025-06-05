@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import dayjs from 'dayjs'
 import ru from 'dayjs/locale/ru'
@@ -8,6 +8,14 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 // Подключаем плагины и локаль
 dayjs.extend(advancedFormat)
 dayjs.locale(ru)
+
+// Получаем пропс выбранной даты
+const props = defineProps({
+    selectedDate: {
+        type: Object,
+        default: null
+    }
+})
 
 // Храним массив дат в localStorage
 const dates = useStorage('dates', [
@@ -25,14 +33,26 @@ const dates = useStorage('dates', [
     }
 ])
 
-function add() {
-    const today = {
-        day: dayjs().format('MM-DD-YYYY'),
-        week: dayjs().format('dddd')
+// Вычисляемое свойство для текущего count
+const currentCount = computed(() => {
+    if (!props.selectedDate) {
+        // Если дата не выбрана, показываем count для сегодняшнего дня
+        const today = dayjs().format('MM-DD-YYYY')
+        const todayEntry = dates.value.find(d => d.day === today)
+        return todayEntry ? todayEntry.count : 0
     }
+    
+    // Если дата выбрана, показываем count для выбранной даты
+    const selectedEntry = dates.value.find(d => d.day === props.selectedDate.day)
+    return selectedEntry ? selectedEntry.count : 0
+})
 
-    // Ищем, есть ли уже сегодняшняя дата в списке
-    const existingDateIndex = dates.value.findIndex(d => d.day === today.day)
+function add() {
+    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('MM-DD-YYYY')
+    const targetWeek = props.selectedDate ? props.selectedDate.week : dayjs().format('dddd')
+
+    // Ищем, есть ли уже эта дата в списке
+    const existingDateIndex = dates.value.findIndex(d => d.day === targetDate)
 
     if (existingDateIndex > -1) {
         // Если нашли — обновляем существующую запись
@@ -53,8 +73,8 @@ function add() {
         dates.value = [
             ...dates.value,
             {
-                day: today.day,
-                week: today.week,
+                day: targetDate,
+                week: targetWeek,
                 time: [dayjs().format('HH:mm:ss')],
                 count: 1
             }
@@ -63,13 +83,10 @@ function add() {
 }
 
 function minus() {
-    // Берём сегодняшнюю дату
-    const today = {
-        day: dayjs().format('MM-DD-YYYY')
-    }
+    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('MM-DD-YYYY')
 
     // Ищем индекс текущего дня в массиве
-    const existingDateIndex = dates.value.findIndex(d => d.day === today.day)
+    const existingDateIndex = dates.value.findIndex(d => d.day === targetDate)
 
     if (existingDateIndex > -1) {
         const currentEntry = dates.value[existingDateIndex]
@@ -83,10 +100,6 @@ function minus() {
                 count: currentEntry.count - 1
             }
 
-            // Если время закончилось — можно удалить запись полностью (по желанию)
-            // Но здесь мы просто оставляем пустой массив и count = 0
-            // Либо можешь добавить условие: если count === 0 → удалить запись
-
             // Обновляем массив
             dates.value = [
                 ...dates.value.slice(0, existingDateIndex),
@@ -99,15 +112,38 @@ function minus() {
 </script>
 
 <template>
-    <h1 v-if="dates.length > 0">{{ dates[dates.length - 1].count}}</h1>
-    <h1 v-else>0</h1>
-    
-    <button @click="minus">-</button>
-    <button @click="add">+</button>
+    <div class="counter-container">
+        <h1>{{ currentCount }}</h1>
+        <div class="buttons">
+            <button @click="minus">-</button>
+            <button @click="add">+</button>
+        </div>
+        <div v-if="selectedDate" class="selected-date">
+            Выбрана дата: {{ selectedDate.display }} {{ selectedDate.week }}
+        </div>
+    </div>
 </template>
 
-<style>
-button{
+<style scoped>
+.counter-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.buttons {
+    margin: 10px 0;
+}
+
+button {
     margin: 5px;
+    padding: 8px 16px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.selected-date {
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9em;
 }
 </style>

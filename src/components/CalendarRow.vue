@@ -12,6 +12,9 @@ dayjs.locale(ru)
 // Получаем данные из localStorage
 const dates = useStorage('dates', [])
 
+// Определяем emit
+const emit = defineEmits(['select-date'])
+
 // Вычисляем даты для текущей недели
 const weekDates = computed(() => {
     const today = dayjs()
@@ -44,6 +47,11 @@ const getBackgroundColor = (count) => {
     if (count <= 15) return '#ef9a9a'
     return '#e57373'
 }
+
+// Обработчик клика по дате
+const handleDateClick = (date) => {
+    emit('select-date', date)
+}
 </script>
 
 <template>
@@ -53,9 +61,10 @@ const getBackgroundColor = (count) => {
             :key="date.day"
             class="calendar-day"
             :style="{ backgroundColor: getBackgroundColor(getCountForDate(date.day)) }"
+            @click="handleDateClick(date)"
         >
             <div class="day-number">{{ date.display }}</div>
-            <div class="day-name">{{ date.week }}</div>
+            <div class="day-name">{{ date.week.split('')[0]+date.week.split('')[1] }}</div>
         </div>
     </div>
 </template>
@@ -70,11 +79,18 @@ const getBackgroundColor = (count) => {
 
 .calendar-day {
     flex: 1;
+    width: 50px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     text-align: center;
     transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .day-number {
