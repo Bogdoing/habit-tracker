@@ -79,7 +79,7 @@ const handleDateClick = (date) => {
 
 .calendar-day {
     flex: 1;
-    width: 50px;
+    /* width: 50px; */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;

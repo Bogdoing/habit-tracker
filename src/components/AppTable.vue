@@ -14,7 +14,6 @@ const dates = useStorage('dates', [])
                 <th>time</th>
                 <th>week</th>
                 <th>count</th>
-                <th>grade</th>
             </tr>
         </thead>
         <tbody>
@@ -22,11 +21,10 @@ const dates = useStorage('dates', [])
                 <td>{{ date.day }}</td>
                 <td>{{ date.week }}</td>
                 <td>{{ date.time.join(', ') }}</td>
-                <td>{{ date.count }}</td>
 
-                <td v-if="date.count < 4">🥳</td>
-                <td v-else-if="date.count < 7">🤮</td>
-                <td v-else>💀</td>
+                <td v-if="date.count < 4">{{ date.count }}🥳</td>
+                <td v-else-if="date.count < 7">{{ date.count }}🤮</td>
+                <td v-else>{{ date.count }}💀</td>
             </tr>
         </tbody>
     </table> 
