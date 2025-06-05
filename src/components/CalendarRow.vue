@@ -24,7 +24,7 @@ const weekDates = computed(() => {
     for (let i = -4; i <= 2; i++) {
         const date = today.add(i, 'day')
         dates.push({
-            day: date.format('MM-DD-YYYY'),
+            day: date.format('DD-MM-YYYY'),
             week: date.format('dddd'),
             display: date.format('D')
         })

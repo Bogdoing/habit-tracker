@@ -37,7 +37,7 @@ const dates = useStorage('dates', [
 const currentCount = computed(() => {
     if (!props.selectedDate) {
         // Если дата не выбрана, показываем count для сегодняшнего дня
-        const today = dayjs().format('MM-DD-YYYY')
+        const today = dayjs().format('DD-MM-YYYY')
         const todayEntry = dates.value.find(d => d.day === today)
         return todayEntry ? todayEntry.count : 0
     }
@@ -48,7 +48,7 @@ const currentCount = computed(() => {
 })
 
 function add() {
-    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('MM-DD-YYYY')
+    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('DD-MM-YYYY')
     const targetWeek = props.selectedDate ? props.selectedDate.week : dayjs().format('dddd')
 
     // Ищем, есть ли уже эта дата в списке
@@ -83,7 +83,7 @@ function add() {
 }
 
 function minus() {
-    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('MM-DD-YYYY')
+    const targetDate = props.selectedDate ? props.selectedDate.day : dayjs().format('DD-MM-YYYY')
 
     // Ищем индекс текущего дня в массиве
     const existingDateIndex = dates.value.findIndex(d => d.day === targetDate)
