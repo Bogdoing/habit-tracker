@@ -113,12 +113,18 @@ function minus() {
 
 <template>
     <div class="counter-container">
-        <h1>{{ currentCount }}</h1>
-        <div class="buttons">
-            <button @click="minus">-</button>
-            <button @click="add">+</button>
+        <h1 class="text-8xl p-5">{{ currentCount }}</h1>
+        <div class="my-10">
+            <button @click="minus"
+                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500">
+                -
+            </button>
+            <button @click="add"
+                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500">
+                +
+            </button>
         </div>
-        <div v-if="selectedDate" class="selected-date">
+        <div v-if="selectedDate" class="">
             Выбрана дата: {{ selectedDate.display }} {{ selectedDate.week }}
         </div>
     </div>
@@ -127,11 +133,6 @@ function minus() {
 <style scoped>
 .counter-container {
     text-align: center;
-    padding: 20px;
-}
-
-.buttons {
-    margin: 10px 0;
 }
 
 button {
@@ -141,9 +142,4 @@ button {
     cursor: pointer;
 }
 
-.selected-date {
-    margin-top: 10px;
-    color: #666;
-    font-size: 0.9em;
-}
 </style>

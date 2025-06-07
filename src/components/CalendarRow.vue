@@ -1,13 +1,10 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
-import dayjs from 'dayjs'
-import ru from 'dayjs/locale/ru'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
+import { useDateFormat, useNow } from '@vueuse/core'
 
-// Подключаем плагины и локаль
-dayjs.extend(advancedFormat)
-dayjs.locale(ru)
+// Текущее время
+const now = useNow()
 
 // Получаем данные из localStorage
 const dates = useStorage('dates', [])
@@ -15,22 +12,33 @@ const dates = useStorage('dates', [])
 // Определяем emit
 const emit = defineEmits(['select-date'])
 
+// Вспомогательная функция для добавления дней к дате
+function addDays(date, days) {
+    const result = new Date(date)
+    result.setDate(result.getDate() + days)
+    return result
+}
+
 // Вычисляем даты для текущей недели
 const weekDates = computed(() => {
-    const today = dayjs()
-    const dates = []
-    
-    // Генерируем 7 дней, начиная с 4 дней назад
+    const today = now.value
+    const datesArray = []
+
     for (let i = -4; i <= 2; i++) {
-        const date = today.add(i, 'day')
-        dates.push({
-            day: date.format('DD-MM-YYYY'),
-            week: date.format('dddd'),
-            display: date.format('D')
+        const date = addDays(today, i)
+
+        const day = useDateFormat(date, 'YYYY-MM-DD').value
+        const week = useDateFormat(date, 'ddd', { locales: 'ru-RU' }).value
+        const display = useDateFormat(date, 'D').value
+
+        datesArray.push({
+            day,
+            week,
+            display
         })
     }
-    
-    return dates
+
+    return datesArray
 })
 
 // Функция для получения count для конкретной даты
@@ -41,11 +49,21 @@ const getCountForDate = (day) => {
 
 // Функция для определения цвета фона в зависимости от count
 const getBackgroundColor = (count) => {
-    if (count === 0) return '#ffffff'
-    if (count <= 5) return '#ffebee'
-    if (count <= 10) return '#ffcdd2'
-    if (count <= 15) return '#ef9a9a'
-    return '#e57373'
+    const isDark = false // Можно использовать usePreferredDark(), если нужно
+
+    if (isDark) {
+        if (count === 0) return '#222'
+        if (count <= 5) return '#ef9a9a'
+        if (count <= 10) return '#f33'
+        if (count <= 15) return '#c62828'
+        return '#e57373'
+    } else {
+        if (count === 0) return '#ffffff'
+        if (count <= 5) return '#ffebee'
+        if (count <= 10) return '#ffcdd2'
+        if (count <= 15) return '#ef9a9a'
+        return '#e57373'
+    }
 }
 
 // Обработчик клика по дате
@@ -55,16 +73,16 @@ const handleDateClick = (date) => {
 </script>
 
 <template>
-    <div class="calendar-row">
+    <div class="calendar-row ">
         <div 
             v-for="date in weekDates" 
             :key="date.day"
-            class="calendar-day"
+            class="calendar-day dark:bg-[#222222]"
             :style="{ backgroundColor: getBackgroundColor(getCountForDate(date.day)) }"
             @click="handleDateClick(date)"
         >
-            <div class="day-number">{{ date.display }}</div>
-            <div class="day-name">{{ date.week.split('')[0]+date.week.split('')[1] }}</div>
+            <div class="day-number ">{{ date.display }}</div>
+            <div class="day-name">{{ date.week }} </div>
         </div>
     </div>
 </template>

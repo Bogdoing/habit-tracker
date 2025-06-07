@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core'
 import CalendarRow from './components/CalendarRow.vue'
 import FullCalendar from './components/FullCalendar.vue'
 import AppCounter from './components/AppCounter.vue'
 import AppTable from './components/AppTable.vue'
 
-const selectedDate = ref(null)
+// default value day 
+const selectedDate = ref({
+  day: useDateFormat(useNow(), 'YYYY-MM-DD', { locales: 'ru-RU' }),
+  week: useDateFormat(useNow(), 'ddd', { locales: 'ru-RU' }),
+  display: useDateFormat(useNow(), 'D', { locales: 'ru-RU' })
+})
+
 const showFullCalendar = ref(false)
 
 const handleDateSelect = (date) => {
@@ -18,8 +25,8 @@ const toggleCalendar = () => {
 </script>
 
 <template>
-  <div class="app-container">
-    <div class="calendar-section">
+  <div class="app-container p-5">
+    <div class="mb-10">
       <button class="toggle-calendar" @click="toggleCalendar">
         {{ showFullCalendar ? 'Показать маленький календарь' : 'Показать полный календарь' }}
       </button>
@@ -37,12 +44,8 @@ const toggleCalendar = () => {
 .app-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 5px;
 }
 
-.calendar-section {
-    margin-bottom: 30px;
-}
 
 .toggle-calendar {
     margin-bottom: 20px;

@@ -1,65 +1,93 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
-import dayjs from 'dayjs'
-import ru from 'dayjs/locale/ru'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
+import { useDateFormat, useNow } from '@vueuse/core'
 
-// Подключаем плагины и локаль
-dayjs.extend(advancedFormat)
-dayjs.locale(ru)
+// Текущая дата
+const now = useNow()
 
-// Получаем данные из localStorage
+// Хранилище данных
 const dates = useStorage('dates', [])
 
 // Определяем emit
 const emit = defineEmits(['select-date'])
 
-// Текущий месяц
-const currentMonth = ref(dayjs())
+// Текущий месяц (хранится как объект Date)
+const currentMonth = ref(new Date())
+
+// Форматирование даты
+function format(date, formatStr) {
+    return useDateFormat(date, formatStr, { locales: 'ru-RU' }).value
+}
+
+// Получаем количество дней в месяце
+function getDaysInMonth(date) {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    return new Date(year, month + 1, 0).getDate()
+}
+
+// Добавление дней к дате
+function addDays(date, days) {
+    const result = new Date(date)
+    result.setDate(result.getDate() + days)
+    return result
+}
+
+// Получение дня недели (0=Вс, 1=Пн, ..., 6=Сб)
+function getDay(date) {
+    const day = date.getDay()
+    return day === 0 ? 6 : day - 1 // делаем понедельник первым днём
+}
 
 // Вычисляем даты для текущего месяца
 const monthDates = computed(() => {
-    const start = currentMonth.value.startOf('month')
-    const end = currentMonth.value.endOf('month')
-    const dates = []
-    
-    // Добавляем дни предыдущего месяца для заполнения первой недели
-    const firstDayOfWeek = start.day()
-    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-        const date = start.subtract(i + 1, 'day')
-        dates.push({
-            day: date.format('DD-MM-YYYY'),
-            week: date.format('dddd'),
-            display: date.format('D'),
+    const today = currentMonth.value
+    const year = today.getFullYear()
+    const month = today.getMonth()
+    const firstDayOfMonth = new Date(year, month, 1)
+    const lastDayOfMonth = new Date(year, month + 1, 0)
+
+    const datesArray = []
+
+    // Дни предыдущего месяца, чтобы заполнить первую неделю
+    const firstDayOfWeek = getDay(firstDayOfMonth)
+    for (let i = firstDayOfWeek; i > 0; i--) {
+        const date = addDays(firstDayOfMonth, -i)
+        datesArray.push({
+            day: useDateFormat(date, 'YYYY-MM-DD').value,
+            week: useDateFormat(date, 'ddd', { locales: 'ru-RU' }).value,
+            display: useDateFormat(date, 'D').value,
             isCurrentMonth: false
         })
     }
-    
-    // Добавляем дни текущего месяца
-    for (let i = 0; i < end.date(); i++) {
-        const date = start.add(i, 'day')
-        dates.push({
-            day: date.format('DD-MM-YYYY'),
-            week: date.format('dddd'),
-            display: date.format('D'),
+
+    // Дни текущего месяца
+    const totalDays = getDaysInMonth(today)
+    for (let i = 1; i <= totalDays; i++) {
+        const date = new Date(year, month, i)
+        datesArray.push({
+            day: useDateFormat(date, 'YYYY-MM-DD').value,
+            week: useDateFormat(date, 'ddd', { locales: 'ru-RU' }).value,
+            display: i,
             isCurrentMonth: true
         })
     }
-    
-    // Добавляем дни следующего месяца для заполнения последней недели
-    const lastDayOfWeek = end.day()
-    for (let i = 1; i <= 7 - lastDayOfWeek; i++) {
-        const date = end.add(i, 'day')
-        dates.push({
-            day: date.format('DD-MM-YYYY'),
-            week: date.format('dddd'),
-            display: date.format('D'),
+
+    // Дни следующего месяца, чтобы заполнить последнюю неделю (всего должно быть 42 дня)
+    const lastDayOfWeek = getDay(lastDayOfMonth)
+    const remainingDays = 6 - lastDayOfWeek
+    for (let i = 1; i <= remainingDays; i++) {
+        const date = addDays(lastDayOfMonth, i)
+        datesArray.push({
+            day: useDateFormat(date, 'YYYY-MM-DD').value,
+            week: useDateFormat(date, 'ddd', { locales: 'ru-RU' }).value,
+            display: useDateFormat(date, 'D').value,
             isCurrentMonth: false
         })
     }
-    
-    return dates
+
+    return datesArray
 })
 
 // Функция для получения count для конкретной даты
@@ -84,28 +112,28 @@ const handleDateClick = (date) => {
 
 // Переключение месяцев
 const prevMonth = () => {
-    currentMonth.value = currentMonth.value.subtract(1, 'month')
+    currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() - 1, 1)
 }
 
 const nextMonth = () => {
-    currentMonth.value = currentMonth.value.add(1, 'month')
+    currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() + 1, 1)
 }
 </script>
 
 <template>
     <div class="full-calendar">
         <div class="calendar-header">
-            <button @click="prevMonth">&lt;</button>
-            <h2>{{ currentMonth.format('MMMM YYYY') }}</h2>
-            <button @click="nextMonth">&gt;</button>
+            <button @click="prevMonth"><</button>
+            <h2>{{ format(currentMonth, 'MMMM YYYY') }}</h2>
+            <button @click="nextMonth">></button>
         </div>
-        
+
         <div class="weekdays">
             <div v-for="day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']" :key="day" class="weekday">
                 {{ day }}
             </div>
         </div>
-        
+
         <div class="calendar-grid">
             <div 
                 v-for="date in monthDates" 
@@ -122,6 +150,7 @@ const nextMonth = () => {
 </template>
 
 <style scoped>
+/* Стили те же самые — можно оставить без изменений */
 .full-calendar {
     width: 100%;
     max-width: 800px;
@@ -203,4 +232,4 @@ const nextMonth = () => {
     font-size: 1.1em;
     font-weight: bold;
 }
-</style> 
+</style>

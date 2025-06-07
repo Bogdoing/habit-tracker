@@ -18,8 +18,9 @@ const dates = useStorage('dates', [])
         </thead>
         <tbody>
             <tr v-for="(date, index) in dates" :key="index">
-                <td>{{ date.day }}</td>
-                <td>{{ date.week }}</td>
+                <td>
+                    {{ date.day }} ({{ date.week }})
+                </td>
                 <td>{{ date.time.join(', ') }}</td>
 
                 <td v-if="date.count < 4">{{ date.count }}🥳</td>
