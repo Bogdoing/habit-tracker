@@ -30,7 +30,7 @@ const toggleCalendar = () => {
 </script>
 
 <template>
-  <div class="p-5 w-full bg-white dark:bg-neutral-800 dark:text-white min-h-screen">
+  <div class="p-5 w-full bg-neutral-100 dark:bg-neutral-800 dark:text-white min-h-screen">
     <div class="mb-10 text-center">
       <button @click="toggleCalendar" 
       class="mb-4 px-2 py-4 bg-neutral-200 rounded-md dark:bg-neutral-700">
