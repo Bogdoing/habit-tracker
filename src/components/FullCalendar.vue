@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useDateFormat, useNow } from '@vueuse/core'
+import { usePreferredDark } from '@vueuse/core'
 
 // Текущая дата
 const now = useNow()
@@ -98,11 +99,21 @@ const getCountForDate = (day) => {
 
 // Функция для определения цвета фона в зависимости от count
 const getBackgroundColor = (count) => {
-    if (count === 0) return '#ffffff'
-    if (count <= 5) return '#ffebee'
-    if (count <= 10) return '#ffcdd2'
-    if (count <= 15) return '#ef9a9a'
-    return '#e57373'
+    const isDark = usePreferredDark()
+    if (isDark.value == true) {
+        if (count === 0) return '#525252'
+        if (count >= 1 && count < 5) return '#58dd56'
+        if (count >= 5 && count < 10) return '#edb936'
+        if (count >= 10 && count < 15) return '#e54242'
+        return '#890000'
+    }
+    else {
+        if (count === 0) return '#ffffff'
+        if (count <= 5) return '#ffebee'
+        if (count <= 10) return '#ffcdd2'
+        if (count <= 15) return '#ef9a9a'
+        return '#e57373'
+    }
 }
 
 // Обработчик клика по дате
@@ -121,14 +132,14 @@ const nextMonth = () => {
 </script>
 
 <template>
-    <div class="full-calendar">
-        <div class="calendar-header">
-            <button @click="prevMonth"><</button>
+    <div class="full-calendar dark:bg-neutral-600">
+        <div class="calendar-header ">
+            <button @click="prevMonth" class="px-4 py-2 border-0 rounded-md dark:hover:bg-neutral-500 dark:bg-neutral-600"><</button>
             <h2>{{ format(currentMonth, 'MMMM YYYY') }}</h2>
-            <button @click="nextMonth">></button>
+            <button @click="nextMonth" class="px-4 py-2 border-0 rounded-md dark:hover:bg-neutral-500 dark:bg-neutral-600">></button>
         </div>
 
-        <div class="weekdays">
+        <div class="weekdays text-[#666] dark:text-neutral-200">
             <div v-for="day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']" :key="day" class="weekday">
                 {{ day }}
             </div>
@@ -151,7 +162,7 @@ const nextMonth = () => {
 
 <style scoped>
 /* Стили те же самые — можно оставить без изменений */
-.full-calendar {
+/* .full-calendar {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
@@ -159,7 +170,7 @@ const nextMonth = () => {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+} */
 
 .calendar-header {
     display: flex;
@@ -168,18 +179,14 @@ const nextMonth = () => {
     margin-bottom: 20px;
 }
 
-.calendar-header button {
+/* .calendar-header button {
     padding: 8px 16px;
     border: none;
     background: #f5f5f5;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1.2em;
-}
-
-.calendar-header button:hover {
-    background: #e0e0e0;
-}
+} */
 
 .calendar-header h2 {
     margin: 0;
@@ -196,7 +203,7 @@ const nextMonth = () => {
 .weekday {
     text-align: center;
     font-weight: bold;
-    color: #666;
+    /* color: #666; */
     padding: 5px;
 }
 

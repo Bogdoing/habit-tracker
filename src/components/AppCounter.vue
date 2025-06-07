@@ -116,11 +116,15 @@ function minus() {
         <h1 class="text-8xl p-5">{{ currentCount }}</h1>
         <div class="my-10">
             <button @click="minus"
-                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500">
+                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500
+                        dark:bg-neutral-600 dark:text-neutral-200 dark:hover:border-sky-600
+                ">
                 -
             </button>
             <button @click="add"
-                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500">
+                class="bg-gray-200 border-2 border-transparent rounded-md hover:border-2 hover:border-sky-500
+                        dark:bg-neutral-600 dark:text-neutral-200 dark:hover:border-sky-600
+                ">
                 +
             </button>
         </div>

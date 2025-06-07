@@ -25,9 +25,10 @@ const toggleCalendar = () => {
 </script>
 
 <template>
-  <div class="app-container p-5">
-    <div class="mb-10">
-      <button class="toggle-calendar" @click="toggleCalendar">
+  <div class="p-5 w-full bg-white dark:bg-neutral-800 dark:text-white">
+    <div class="mb-10 text-center">
+      <button @click="toggleCalendar" 
+      class="mb-4 px-2 py-4 bg-green-200 rounded-md dark:bg-green-500">
         {{ showFullCalendar ? 'Показать маленький календарь' : 'Показать полный календарь' }}
       </button>
       
@@ -36,30 +37,10 @@ const toggleCalendar = () => {
     </div>
     
     <AppCounter :selected-date="selectedDate" />
+    
     <AppTable />
   </div>
 </template>
 
 <style scoped>
-.app-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-
-.toggle-calendar {
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-.toggle-calendar:hover {
-    background-color: #45a049;
-}
 </style>
