@@ -132,11 +132,11 @@ const nextMonth = () => {
 </script>
 
 <template>
-    <div class="full-calendar dark:bg-neutral-600">
+    <div class="full-calendar dark:bg-neutral-700">
         <div class="calendar-header ">
-            <button @click="prevMonth" class="px-4 py-2 border-0 rounded-md dark:hover:bg-neutral-500 dark:bg-neutral-600"><</button>
+            <button @click="prevMonth" class="px-4 py-2 border-0 rounded-md dark:bg-neutral-700"><</button>
             <h2>{{ format(currentMonth, 'MMMM YYYY') }}</h2>
-            <button @click="nextMonth" class="px-4 py-2 border-0 rounded-md dark:hover:bg-neutral-500 dark:bg-neutral-600">></button>
+            <button @click="nextMonth" class="px-4 py-2 border-0 rounded-md dark:bg-neutral-700">></button>
         </div>
 
         <div class="weekdays text-[#666] dark:text-neutral-200">

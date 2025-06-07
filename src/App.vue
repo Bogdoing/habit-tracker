@@ -14,6 +14,11 @@ const selectedDate = ref({
 })
 
 const showFullCalendar = ref(false)
+const showAppTable = ref()
+
+function onShowAppTable() {
+  showAppTable.value = !showAppTable.value
+}
 
 const handleDateSelect = (date) => {
     selectedDate.value = date
@@ -25,10 +30,10 @@ const toggleCalendar = () => {
 </script>
 
 <template>
-  <div class="p-5 w-full bg-white dark:bg-neutral-800 dark:text-white">
+  <div class="p-5 w-full bg-white dark:bg-neutral-800 dark:text-white min-h-screen">
     <div class="mb-10 text-center">
       <button @click="toggleCalendar" 
-      class="mb-4 px-2 py-4 bg-green-200 rounded-md dark:bg-green-500">
+      class="mb-4 px-2 py-4 bg-neutral-200 rounded-md dark:bg-neutral-700">
         {{ showFullCalendar ? 'Показать маленький календарь' : 'Показать полный календарь' }}
       </button>
       
@@ -37,8 +42,13 @@ const toggleCalendar = () => {
     </div>
     
     <AppCounter :selected-date="selectedDate" />
-    
-    <AppTable />
+
+    <div class="w-full text-center">
+      <button @click="onShowAppTable" class="my-10">
+        Показать/Скрыть таблицу
+      </button>
+      <AppTable v-if="showAppTable"/>
+    </div>
   </div>
 </template>
 
