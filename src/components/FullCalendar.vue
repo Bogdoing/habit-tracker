@@ -116,10 +116,10 @@ const getBackgroundColor = (count) => {
     }
 }
 
-// // Обработчик клика по дате
-// const handleDateClick = (date) => {
-//     emit('select-date', date)
-// }
+// Обработчик клика по дате
+const handleDateClick = (date) => {
+    emit('select-date', date)
+}
 
 // Переключение месяцев
 const prevMonth = () => {
@@ -153,6 +153,7 @@ const nextMonth = () => {
                 :class="{ 'other-month': !date.isCurrentMonth }"
                 :style="{ backgroundColor: getBackgroundColor(getCountForDate(date.day)) }"
                 @click="handleDateClick(date)"
+                
             >
                 <div class="day-number">{{ date.display }}</div>
             </div>
@@ -229,6 +230,11 @@ const nextMonth = () => {
 .calendar-day:hover {
     transform: scale(1.05);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.calendar-day:focus {
+    outline: 3px solid #42b883;
+    box-shadow: 0 0 0 4px rgba(66, 184, 131, 0.3);
 }
 
 .calendar-day.other-month {

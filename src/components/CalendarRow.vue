@@ -81,6 +81,7 @@ const handleDateClick = (date) => {
             class="calendar-day dark:text-neutral-100"
             :style="{ backgroundColor: getBackgroundColor(getCountForDate(date.day)) }"
             @click="handleDateClick(date)"
+            tabindex="0"
         >
             <div class="day-number dark:text-neutral-100">{{ date.display }}</div>
             <div class="day-name text-[#666666] dark:text-neutral-100">{{ date.week }} </div>
@@ -106,8 +107,13 @@ const handleDateClick = (date) => {
 }
 
 .calendar-day:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.calendar-day:focus {
+    outline: 3px solid #42b883;
+    box-shadow: 0 0 0 4px rgba(66, 184, 131, 0.3);
 }
 
 .day-number {
