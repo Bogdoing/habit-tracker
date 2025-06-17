@@ -11,28 +11,35 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      includeAssets: ['logo.svg'],
       manifest: {
-        name: 'My Awesome App',
-        short_name: 'MyApp',
-        description: 'My Awesome App description',
+        name: 'Habit-Tracker',
+        short_name: 'Habit Tracker',
+        description: 'My habit tracker',
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'logo.svg',
+            src: 'logo192.png',
             sizes: '192x192',
-            type: 'image/svg'
+            type: 'image/png'
           },
           {
-            src: 'logo.svg',
+            src: 'logo192.png',
             sizes: '512x512',
-            type: 'image/svg'
+            type: 'image/png'
           }
         ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+      },
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
+      },
+      devOptions: {
+        enabled: false
       }
-      // devOptions: {
-      //   enabled: false
-      // }
     })
   ],
 })
