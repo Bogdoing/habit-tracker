@@ -25,7 +25,7 @@ const weekDates = computed(() => {
     const today = now.value
     const datesArray = []
 
-    for (let i = -4; i <= 2; i++) {
+    for (let i = -4; i <= 0; i++) {
         const date = addDays(today, i)
 
         const day = useDateFormat(date, 'YYYY-MM-DD').value
@@ -53,16 +53,16 @@ const getBackgroundColor = (count) => {
     const isDark = usePreferredDark()
     if (isDark.value == true) {
         if (count === 0) return '#525252'
-        if (count >= 1 && count < 5) return '#58dd56'
-        if (count >= 5 && count < 10) return '#edb936'
-        if (count >= 10 && count < 15) return '#e54242'
+        if (count >= 1 && count < 3) return '#58dd56'
+        if (count >= 3 && count < 6) return '#edb936'
+        if (count >= 6 && count < 10) return '#e54242'
         return '#890000'
     }
     else {
         if (count === 0) return '#ffffff'
-        if (count >= 1 && count < 5) return '#58dd56'
-        if (count >= 5 && count < 10) return '#edb936'
-        if (count >= 10 && count < 15) return '#e54242'
+        if (count >= 1 && count < 3) return '#58dd56'
+        if (count >= 3 && count < 6) return '#edb936'
+        if (count >= 6 && count < 10) return '#e54242'
         return '#ce0202'
     }
 }
@@ -92,14 +92,14 @@ const handleDateClick = (date) => {
 .calendar-row {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    gap: 5px;
 }
 
 .calendar-day {
     flex: 1;
-    padding: 10px;
+    padding: 10px 5px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 10px;
     text-align: center;
     transition: background-color 0.3s ease;
     cursor: pointer;

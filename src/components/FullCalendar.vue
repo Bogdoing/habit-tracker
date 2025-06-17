@@ -102,24 +102,24 @@ const getBackgroundColor = (count) => {
     const isDark = usePreferredDark()
     if (isDark.value == true) {
         if (count === 0) return '#525252'
-        if (count >= 1 && count < 5) return '#58dd56'
-        if (count >= 5 && count < 10) return '#edb936'
-        if (count >= 10 && count < 15) return '#e54242'
+        if (count >= 1 && count < 3) return '#58dd56'
+        if (count >= 3 && count < 6) return '#edb936'
+        if (count >= 6 && count < 10) return '#e54242'
         return '#890000'
     }
     else {
         if (count === 0) return '#ffffff'
-        if (count <= 5) return '#ffebee'
-        if (count <= 10) return '#ffcdd2'
-        if (count <= 15) return '#ef9a9a'
-        return '#e57373'
+        if (count >= 1 && count < 3) return '#58dd56'
+        if (count >= 3 && count < 6) return '#edb936'
+        if (count >= 6 && count < 10) return '#e54242'
+        return '#ce0202'
     }
 }
 
-// Обработчик клика по дате
-const handleDateClick = (date) => {
-    emit('select-date', date)
-}
+// // Обработчик клика по дате
+// const handleDateClick = (date) => {
+//     emit('select-date', date)
+// }
 
 // Переключение месяцев
 const prevMonth = () => {
