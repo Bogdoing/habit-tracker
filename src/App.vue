@@ -5,7 +5,7 @@ import CalendarRow from './components/CalendarRow.vue'
 import FullCalendar from './components/FullCalendar.vue'
 import AppCounter from './components/AppCounter.vue'
 import AppTable from './components/AppTable.vue'
-import { exportLocalStorageData } from './untils/exportData.js'
+import { exportLocalStorageData, importLocalStorageData } from './untils/exportData.js'
 
 // default value day 
 const selectedDate = ref({
@@ -33,6 +33,18 @@ const toggleCalendar = () => {
 const downloadLocalStorageData = () => {
   exportLocalStorageData()
 }
+
+// Функция для загрузки данных
+const uploadLocalStorageData = async () => {
+  try {
+    const message = await importLocalStorageData()
+    alert(message)
+    // Перезагружаем страницу для применения изменений
+    window.location.reload()
+  } catch (error) {
+    alert('Ошибка: ' + error.message)
+  }
+}
 </script>
 
 <template>
@@ -43,10 +55,15 @@ const downloadLocalStorageData = () => {
         {{ showFullCalendar ? 'Показать маленький календарь' : 'Показать полный календарь' }}
       </button>
       
-      <!-- Добавляем кнопку для скачивания -->
+      <!-- Кнопки для экспорта и импорта -->
       <button @click="downloadLocalStorageData" 
               class="mb-4 ml-2 px-2 py-4 bg-green-200 rounded-md dark:bg-green-700">
         Скачать данные
+      </button>
+      
+      <button @click="uploadLocalStorageData" 
+              class="mb-4 ml-2 px-2 py-4 bg-blue-200 rounded-md dark:bg-blue-700">
+        Загрузить данные
       </button>
       
       <CalendarRow v-if="!showFullCalendar" @select-date="handleDateSelect" />
